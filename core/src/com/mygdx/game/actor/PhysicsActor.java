@@ -1,7 +1,8 @@
-package com.mygdx.game;
+package com.mygdx.game.actor;
 
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.mygdx.game.actor.AnimatedActor;
 
 /**
  * Created by omakhobei on 8/4/2016.
