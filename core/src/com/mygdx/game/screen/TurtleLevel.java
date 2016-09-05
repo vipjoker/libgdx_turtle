@@ -3,6 +3,8 @@ package com.mygdx.game.screen;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -24,7 +26,10 @@ public class TurtleLevel extends BaseScreen {
     private PhysicsActor turtle;
     private int mapWith =800;
     private int mapHeight = 600;
-
+    private float audioVolume;
+    private Sound waterDrop;
+    private Music instrumental;
+    private Music oceanSurf;
     public TurtleLevel(Game game){
         super(game);
     }
@@ -35,6 +40,20 @@ public class TurtleLevel extends BaseScreen {
         ocean.setTexture(new Texture("water.jpg"));
         ocean.setPosition(0,0);
         mainStage.addActor(ocean);
+
+
+        waterDrop = Gdx.audio.newSound(Gdx.files.internal("sounds/Water_Drop.ogg"));
+        instrumental = Gdx.audio.newMusic(Gdx.files.internal("sounds/Master_of_the_Feast.ogg"));
+        oceanSurf = Gdx.audio.newMusic(Gdx.files.internal("sounds/Ocean_Waves.ogg"));
+        audioVolume = 0.8f;
+        instrumental.setLooping(true);
+        instrumental.setVolume(audioVolume);
+        instrumental.play();
+
+        oceanSurf.setLooping(true);
+        oceanSurf.setVolume(audioVolume);
+        oceanSurf.play();
+
 
         BaseActor overlay = ocean.clone();
         overlay.setPosition(-50,-50);
@@ -134,8 +153,10 @@ public class TurtleLevel extends BaseScreen {
 
         ArrayList<BaseActor> removeList = new ArrayList<>();
         for (BaseActor s :starfishList){
-            if(turtle.overlaps(s,false))
+            if(turtle.overlaps(s,false)) {
+                waterDrop.play(audioVolume);
                 removeList.add(s);
+            }
         }
 
 
@@ -144,5 +165,12 @@ public class TurtleLevel extends BaseScreen {
             starfishList.remove(b);
         }
 
+    }
+
+    @Override
+    public void dispose() {
+        waterDrop.dispose();
+        instrumental.dispose();
+        oceanSurf.dispose();
     }
 }
