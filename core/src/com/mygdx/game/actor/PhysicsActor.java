@@ -82,7 +82,7 @@ public class PhysicsActor extends AnimatedActor {
     public void act(float dt){
         super.act(dt);
 
-        velocity.add(acceleration.x * dt,acceleration.y * dt);
+        velocity.add(acceleration.x * dt , acceleration.y * dt);
 
         if(acceleration.len() < 0.01){
             float decelerateAmount = deceleration * dt;

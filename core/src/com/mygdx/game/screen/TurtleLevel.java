@@ -2,9 +2,11 @@ package com.mygdx.game.screen;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.actor.BaseActor;
 import com.mygdx.game.actor.PhysicsActor;
@@ -106,6 +108,41 @@ public class TurtleLevel extends BaseScreen {
 
     @Override
     public void update(float dt) {
+
+        turtle.setAccelerationAS(0,0);
+        if(Gdx.input.isKeyPressed(Input.Keys.LEFT)){
+            turtle.rotateBy(90*dt);
+        }
+        if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
+            turtle.rotateBy(-90 * dt);
+        }
+        if(Gdx.input.isKeyPressed(Input.Keys.UP)){
+            turtle.accelerateForward(100);
+        }
+
+        if(turtle.getSpeed() > 1 && turtle.getAnimationName().equals("rest"))
+            turtle.setActiveAnimation("swim");
+        if(turtle.getSpeed() < 1 && turtle.getAnimationName().equals("swim"))
+            turtle.setActiveAnimation("rest");
+
+
+        turtle.setX(MathUtils.clamp(turtle.getX(),0,mapWith - turtle.getWidth()));
+        turtle.setY(MathUtils.clamp(turtle.getY(),0,mapHeight - turtle.getHeight()));
+
+        for(BaseActor r :rockList)
+            turtle.overlaps(r,true);
+
+        ArrayList<BaseActor> removeList = new ArrayList<>();
+        for (BaseActor s :starfishList){
+            if(turtle.overlaps(s,false))
+                removeList.add(s);
+        }
+
+
+        for(BaseActor b :removeList){
+            b.remove();
+            starfishList.remove(b);
+        }
 
     }
 }
